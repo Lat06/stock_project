@@ -1,5 +1,6 @@
 package org.example.server.network.dao;
 
+import org.example.shared.model.Product;
 import org.example.ProductGroup;
 
 import java.sql.*;
@@ -40,7 +41,7 @@ public class GroupDao {
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.err.println("❌ SQL помилка при додаванні групи: " + e.getMessage());
+            System.err.println(" SQL помилка при додаванні групи: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -78,7 +79,6 @@ public class GroupDao {
         }
     }
 
-    // Залишено для сумісності зі старим кодом, якщо десь ще використовується
     public List<String> getAllGroupNames() {
         List<String> result = new ArrayList<>();
         String sql = "SELECT name FROM product_groups";

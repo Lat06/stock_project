@@ -1,5 +1,6 @@
 package org.example;
 
+
 public class ProductGroup {
     private int id;
     private String name;
