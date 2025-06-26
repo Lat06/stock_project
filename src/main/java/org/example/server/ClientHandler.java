@@ -1,5 +1,6 @@
 package org.example.server;
 
+import org.example.ProductGroup;
 import org.example.server.network.dao.GroupDao;
 
 import java.io.*;
@@ -16,47 +17,56 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try (
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true)
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
         ) {
-            String command = in.readLine();
-            System.out.println("Отримано команду: " + command);
-
-            GroupDao dao = new GroupDao();
-
-            if ("GET_GROUPS".equalsIgnoreCase(command)) {
-                List<String> groupNames = dao.getAllGroupNames();
-                for (String name : groupNames) {
-                    out.println(name);
-                }
-                out.println("END");
-
-            } else if (command.startsWith("ADD_GROUP:")) {
-                String name = command.substring("ADD_GROUP:".length()).trim();
-                boolean success = dao.addGroup(name);
-                out.println(success ? "OK" : "FAIL");
-
-            } else if (command.startsWith("DELETE_GROUP:")) {
-                String name = command.substring("DELETE_GROUP:".length()).trim();
-                boolean success = dao.deleteGroupByName(name);
-                out.println(success ? "OK" : "FAIL");
-
-            } else if (command.startsWith("UPDATE_GROUP:")) {
-                String[] parts = command.substring("UPDATE_GROUP:".length()).split("->");
-                if (parts.length == 2) {
-                    String oldName = parts[0].trim();
-                    String newName = parts[1].trim();
-                    boolean success = dao.updateGroupName(oldName, newName);
-                    out.println(success ? "OK" : "FAIL");
-                } else {
-                    out.println("ERROR: Невірний формат команди");
-                }
-
-            } else {
-                out.println("ERROR: Невідома команда");
+            Object commandObj = in.readObject();
+            if (!(commandObj instanceof String command)) {
+                out.writeObject("ERROR: invalid command");
+                return;
             }
 
-        } catch (IOException e) {
+            System.out.println("Отримано команду: " + command);
+            GroupDao dao = new GroupDao();
+
+            switch (command) {
+                case "get_groups" -> {
+                    List<ProductGroup> groups = dao.getAllGroups();
+                    out.writeObject(groups);
+                    out.flush();
+                }
+
+                case "add_group" -> {
+                    String name = (String) in.readObject();
+                    String description = (String) in.readObject();
+                    boolean success = dao.addGroup(name, description);
+                    out.writeObject(success ? "OK" : "FAIL");
+                    out.flush();
+                }
+
+                case "update_group" -> {
+                    String oldName = (String) in.readObject();
+                    String newName = (String) in.readObject();
+                    String newDescription = (String) in.readObject();
+                    boolean success = dao.updateGroup(oldName, newName, newDescription);
+                    out.writeObject(success ? "OK" : "FAIL");
+                    out.flush();
+                }
+
+                case "delete_group" -> {
+                    String name = (String) in.readObject();
+                    boolean success = dao.deleteGroupByName(name);
+                    out.writeObject(success ? "OK" : "FAIL");
+                    out.flush();
+                }
+
+                default -> {
+                    out.writeObject("ERROR: Unknown command");
+                    out.flush();
+                }
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
