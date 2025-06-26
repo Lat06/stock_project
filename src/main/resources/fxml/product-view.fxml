@@ -1,0 +1,26 @@
+<!-- src/main/resources/product-view.fxml -->
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.ProductController">
+    <VBox spacing="10.0" padding="10">
+        <TableView fx:id="productTable">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Назва"/>
+                <TableColumn fx:id="descriptionColumn" text="Опис"/>
+                <TableColumn fx:id="manufacturerColumn" text="Виробник"/>
+                <TableColumn fx:id="quantityColumn" text="Кількість"/>
+                <TableColumn fx:id="priceColumn" text="Ціна"/>
+                <TableColumn fx:id="groupColumn" text="Група"/>
+            </columns>
+        </TableView>
+
+        <HBox spacing="10">
+            <Button text="Додати" onAction="#onAdd"/>
+            <Button text="Редагувати" onAction="#onEdit"/>
+            <Button text="Видалити" onAction="#onDelete"/>
+        </HBox>
+    </VBox>
+</AnchorPane>
