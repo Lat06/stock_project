@@ -49,6 +49,7 @@ public class GroupDao {
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
+            System.err.println("❌ SQL помилка при додаванні групи: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
