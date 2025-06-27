@@ -1,10 +1,13 @@
 package org.example;
 
+import java.io.Serializable;
 
-public class ProductGroup {
+public class ProductGroup implements Serializable {
     private int id;
     private String name;
     private String description;
+
+    public ProductGroup() {}
 
     public ProductGroup(int id, String name, String description) {
         this.id = id;
@@ -12,12 +15,13 @@ public class ProductGroup {
         this.description = description;
     }
 
-    // Для створення без ID (нові об'єкти)
     public ProductGroup(String name, String description) {
-        this(-1, name, description);
+        this.name = name;
+        this.description = description;
     }
 
-    // Getters і Setters
+    // Getters and setters
+
     public int getId() {
         return id;
     }
@@ -40,10 +44,5 @@ public class ProductGroup {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return name; // для ComboBox
     }
 }
