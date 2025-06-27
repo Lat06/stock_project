@@ -23,5 +23,7 @@
         <Button text="Додати" onAction="#onAdd"/>
         <Button text="Редагувати" onAction="#onEdit"/>
         <Button text="Видалити" onAction="#onDelete"/>
+        <Button text="Статистика" onAction="#onShowStats"/>
+
     </HBox>
 </VBox>

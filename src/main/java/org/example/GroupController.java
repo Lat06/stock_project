@@ -14,7 +14,11 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
+import javafx.scene.control.Alert;
 
 import java.net.URL;
 import java.util.List;
@@ -77,7 +81,7 @@ public class GroupController implements Initializable {
                 if (addTask.getValue()) {
                     groups.add(newGroup);
                 } else {
-                    showAlert("Помилка", "Не вдалося додати групу.");
+                    showAlert("Увага", "Група з такою назвою вже існує!");
                 }
             });
 
@@ -88,6 +92,22 @@ public class GroupController implements Initializable {
 
             new Thread(addTask).start();
         });
+    }
+
+    @FXML
+    private void onShowStats() {
+        System.out.println("Клік по кнопці Статистика");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/stats.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Статистика");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Не вдалося відкрити вікно статистики:\n" + e.getMessage()).showAndWait();
+        }
     }
 
     @FXML
@@ -199,7 +219,7 @@ public class GroupController implements Initializable {
 
     private void showAlert(String title, String content) {
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setContentText(content);
             alert.showAndWait();

@@ -76,7 +76,7 @@ public class ClientHandler implements Runnable {
                 case "delete_group" -> {
                     try {
                         String name = (String) in.readObject();
-                        boolean success = groupDao.deleteGroupByName(name);
+                        boolean success = groupDao.deleteGroup(name);
                         out.writeObject(success ? "OK" : "FAIL");
                     } catch (Exception e) {
                         e.printStackTrace();

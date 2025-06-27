@@ -2,6 +2,7 @@ package org.example.network;
 
 import org.example.ProductGroup;
 import org.example.shared.model.Product;
+import org.example.shared.model.ProductGroupStats;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,7 +17,6 @@ public class ClientSocketService {
         this.host = host;
         this.port = port;
     }
-
 
     public List<ProductGroup> getGroupObjects() {
         List<ProductGroup> result = new ArrayList<>();
@@ -99,8 +99,6 @@ public class ClientSocketService {
         }
     }
 
-
-
     public List<Product> getProducts() {
         List<Product> result = new ArrayList<>();
         try (Socket socket = new Socket(host, port);
@@ -165,5 +163,29 @@ public class ClientSocketService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<ProductGroupStats> getStats() {
+        List<ProductGroupStats> result = new ArrayList<>();
+        try (Socket socket = new Socket(host, port);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+
+            out.writeObject("get_stats");
+            out.flush();
+
+            Object response = in.readObject();
+            if (response instanceof List<?> list) {
+                for (Object obj : list) {
+                    if (obj instanceof ProductGroupStats stats) {
+                        result.add(stats);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

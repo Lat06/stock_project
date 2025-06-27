@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.StatsController"
+      spacing="10" padding="10">
+
+    <TableView fx:id="statsTable" prefHeight="400">
+        <columns>
+            <TableColumn fx:id="groupColumn" text="Група"/>
+            <TableColumn fx:id="countColumn" text="Кількість товарів"/>
+            <TableColumn fx:id="sumColumn" text="Загальна ціна"/>
+            <TableColumn fx:id="avgColumn" text="Середня ціна"/>
+        </columns>
+    </TableView>
+
+    <Button text="Оновити" onAction="#onRefresh"/>
+</VBox>
